@@ -26,7 +26,7 @@ export class GqlResponseInterceptor implements NestInterceptor {
             statusCode: HttpStatus.OK,
             data: isPaginated ? null : res ?? null,
             paginatedData: isPaginated ? res : undefined,
-            message: undefined,
+            message: "data retreived successfully",
         };
       }),
       catchError((exception: any) =>

@@ -1,8 +1,14 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Type } from '@nestjs/common';
 import { PageInfo } from './page-info.dto';
 
-export function PaginatedResponse<TItem>(ItemClass: Type<TItem>) {
+const paginationCache = new Map<any, any>();
+
+export function PaginatedResponse<TItem>(ItemClass: new () => TItem) {
+  
+  if (paginationCache.has(ItemClass)) {
+    return paginationCache.get(ItemClass);
+  }
+
   @ObjectType(`${ItemClass.name}Paginated`)
   abstract class PaginatedType {
     @Field(() => [ItemClass])
@@ -12,5 +18,6 @@ export function PaginatedResponse<TItem>(ItemClass: Type<TItem>) {
     pageInfo!: PageInfo;
   }
 
+  paginationCache.set(ItemClass, PaginatedType);
   return PaginatedType;
 }
